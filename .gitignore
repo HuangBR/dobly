@@ -1,0 +1,14 @@
+ 
+*.\#
+*.bin
+*.debug
+*.elf
+*.o
+*.out
+*.pyc
+*.swp
+*.img
+
+# Development friendly files
+tags
+.clang_complete
