@@ -10,7 +10,7 @@ mov sp, bp
 mov bx, MSG_REAL_MODE
 call print_string
 
-call load_kernel
+;call load_kernel
 
 call switch_to_pm
 
@@ -18,7 +18,7 @@ jmp $
 
 %include "print/print_string_16.asm"
 %include "print/print_hex.asm"
-%include "disk/disk_load.asm"
+%include "disk/disk_load_so.asm"
 %include "pm/gdt.asm"
 %include "pm/print_string_pm.asm"
 %include "pm/switch_to_pm.asm"
@@ -28,17 +28,18 @@ load_kernel:
     mov bx, MSG_LOAD_KERNEL
     call print_string
 
-    mov bx, KERNEL_OFFSET
-    mov dh, 1
-    mov dl, [BOOT_DRIVE]
+    mov bx, KERNEL_OFFSET ; set kernel load position in memory
+    mov dh, 2            ; set number of sectors read
+    mov dl, [BOOT_DRIVE]  ; set read driver
     call disk_load
     ret
+
 [bits 32]
 BEGIN_PM:
     mov ebx, MSG_PROT_MODE
     call print_string_pm
     
-    call KERNEL_OFFSET
+;    call KERNEL_OFFSET
 
     jmp $
 

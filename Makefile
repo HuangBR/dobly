@@ -19,9 +19,11 @@ all : $(MAIN)
 $(MAIN): $(SRCS)
 	$(AS) $(ASFLAGS) $^ -o $@
 
-run: $(MAIN) kernel.bin
-	cat $^ > os.img
-	qemu-system-i386 -drive format=raw,file=os.img -display curses -s -S -monitor stdio
+os.img : $(MAIN) kernel.bin
+	cat $^ > $@
+
+run: os.img
+	qemu-system-i386 -drive format=raw,file=$< -display curses -s -S -monitor stdio
 
 kernel.bin: kernel.o
 	$(LD) $(LDFLAGS) $< -o $@

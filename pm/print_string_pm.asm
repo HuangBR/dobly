@@ -26,6 +26,5 @@ print_string_pm_done:
     ; add edx, 2
     ; mov al, 0x0a        ; 0x0a == '\n'
     ; mov [edx], ax
-
     popa
     ret
