@@ -1,4 +1,5 @@
 print_string:
+    push ax
     mov ah, 0x0e
     loop:
         mov al, [bx]
@@ -9,5 +10,6 @@ print_string:
         jmp loop
     out:
         xor bx, bx
+        pop ax
         ret
 

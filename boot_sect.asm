@@ -10,7 +10,7 @@ mov sp, bp
 mov bx, MSG_REAL_MODE
 call print_string
 
-;call load_kernel
+call load_kernel
 
 call switch_to_pm
 
@@ -39,7 +39,7 @@ BEGIN_PM:
     mov ebx, MSG_PROT_MODE
     call print_string_pm
     
-;    call KERNEL_OFFSET
+    call KERNEL_OFFSET
 
     jmp $
 

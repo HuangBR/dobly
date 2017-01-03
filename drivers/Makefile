@@ -3,7 +3,7 @@
 #
 
 CC = gcc
-CFLAGS = -Wall -Wextra -ffreestanding
+CFLAGS = -Wall -Wextra -ffreestanding -g
 
 SRCS = screen.c common.c
 

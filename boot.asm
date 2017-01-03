@@ -7,7 +7,7 @@ mov sp, bp
 ; GDT
 gdt_start:
 
-gtd_null:
+gdt_null:
     dd 0x0
     dd 0x0
 
@@ -91,7 +91,8 @@ BEGIN_PM:
     mov ebx, MSG_PROT_MODE
     call print_string_pm
 
-
+    mov ebx, HELLOC
+    call print_string_pm
 
     jmp $
 

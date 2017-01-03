@@ -9,12 +9,18 @@ disk_load:
 
     int 0x13
 
-    jc disk_error
-
+    jc check_error
+    jmp disk_ok
+check_error:
+    cmp ah, 0x0e
+    jne disk_error
+disk_ok:
     pop dx
     cmp dh, al
     jne sector_error
     ret
+
+    
 
 disk_error:
     mov bx, DISK_ERROR_MSG

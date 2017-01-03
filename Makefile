@@ -14,7 +14,9 @@ SRCS := boot_sect.asm
 
 MAIN = boot_sect.bin
 
-all : $(MAIN)
+DRIVERS = $(addprefix drivers/, common.o screen.o)
+
+all : os.img
 
 $(MAIN): $(SRCS)
 	$(AS) $(ASFLAGS) $^ -o $@
@@ -22,11 +24,14 @@ $(MAIN): $(SRCS)
 os.img : $(MAIN) kernel.bin
 	cat $^ > $@
 
-run: os.img
-	qemu-system-i386 -drive format=raw,file=$< -display curses -s -S -monitor stdio
+$(DRIVERS):
+	@make -C drivers
 
-kernel.bin: kernel.o
-	$(LD) $(LDFLAGS) $< -o $@
+run: os.img
+	qemu-system-i386 -drive format=raw,file=$< -display sdl -s -S -monitor stdio
+
+kernel.bin: kernel.o $(DRIVERS)
+	$(LD) $(LDFLAGS) $^ -o $@
 
 print_string.o: print_string.asm
 	$(AS) -f elf -F dwarf $^ -o $@
@@ -46,5 +51,5 @@ debug:
 .PHONY: clean
 
 clean:
-	$(RM) *.o *.bin os.img $(MAIN)
-
+	$(RM) *.o *.bin os.img $(MAIN) .*.swp
+	@make -C drivers clean
