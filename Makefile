@@ -2,7 +2,7 @@
 #
 #
 GCC = gcc
-CFLAGS = -ffreestanding -O2 -m32 -g -fno-stack-protector -W -Wall -nostdinc
+CFLAGS = -ffreestanding -O2 -m32 -g -W -Wall -nostdinc -fno-builtin -fno-stack-protector 
 
 LD = ld
 LDFLAGS = -Ttext 0x1000 --oformat binary -m elf_i386 -nostdlib 
