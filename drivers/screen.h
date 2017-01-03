@@ -10,4 +10,9 @@
 #define REG_SCREEN_CTRL 0x3D4
 #define REG_SCREEN_DATA 0x3D5
 
+#define CURSOR_LOC_HIGH 0x0E
+#define CURSOR_LOC_LOW  0x0F
+
+void print(char *);
+
 #endif /* _SCREEN_H */

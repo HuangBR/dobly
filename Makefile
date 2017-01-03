@@ -2,10 +2,10 @@
 #
 #
 GCC = gcc
-CFLAGS = -fhosted 
+CFLAGS = -ffreestanding -O2 -m32 -g -fno-stack-protector -W -Wall -nostdinc
 
 LD = ld
-LDFLAGS = -Ttext 0x1000 --oformat binary
+LDFLAGS = -Ttext 0x1000 --oformat binary -m elf_i386 -nostdlib 
 
 AS = nasm
 ASFLAGS = -f bin -g

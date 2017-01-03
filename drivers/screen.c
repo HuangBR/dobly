@@ -12,9 +12,9 @@ void memcpy(char *dest, char *src, int len)
 
 int get_cursor()
 {
-    outb(REG_SCREEN_CTRL, 14);
+    outb(REG_SCREEN_CTRL, CURSOR_LOC_HIGH);
     int offset = inb(REG_SCREEN_DATA) << 8;
-    outb(REG_SCREEN_CTRL, 15);
+    outb(REG_SCREEN_CTRL, CURSOR_LOC_LOW);
     offset += inb(REG_SCREEN_DATA);
     return(offset * 2);
 } 
@@ -22,9 +22,9 @@ int get_cursor()
 void set_cursor(int offset)
 {
     offset /= 2;
-    outb(REG_SCREEN_CTRL, 14);
-    outb(REG_SCREEN_DATA, (u8)(offset >> 8));
-    outb(REG_SCREEN_CTRL, 15);
+    outb(REG_SCREEN_CTRL, CURSOR_LOC_HIGH);
+    outb(REG_SCREEN_DATA, offset >> 8);
+    outb(REG_SCREEN_CTRL, CURSOR_LOC_LOW);
     outb(REG_SCREEN_DATA, offset);
 }
 
