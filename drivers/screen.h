@@ -15,4 +15,9 @@
 
 void print(char *);
 
+#define get_screen_offset(col, row) (((row) *80 + (col)) * 2)
+
+int get_cursor();
+void set_cursor(int);
+
 #endif /* _SCREEN_H */

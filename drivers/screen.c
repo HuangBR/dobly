@@ -1,7 +1,6 @@
 #include "common.h"
 #include "screen.h"
 
-#define get_screen_offset(col, row) (((row) *80 + (col)) * 2)
 
 void memcpy(char *dest, char *src, int len)
 {
