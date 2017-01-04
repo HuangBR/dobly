@@ -65,16 +65,18 @@ void print_char(char c, int col, int row, char attr)
         offset = get_cursor();
 
     if(c == '\n'){
-        int rows = offset / (2 * MAX_COLS) + 1;
-        offset = get_screen_offset(0, rows);
+        int rows = offset / (2 * MAX_COLS) ;
+        offset = get_screen_offset(79, rows);
     } else {
         vidmem[offset] = c;
         vidmem[offset+1] = attr;
     }
 
+    offset += 2;
+
     offset = handle_scrolling(offset);
 
-    set_cursor(offset + 2);
+    set_cursor(offset);
 }
 
 void print_at(char *message, int col, int row)
