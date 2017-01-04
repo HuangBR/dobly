@@ -3,7 +3,7 @@ display_library:    sdl
 romimage:           file=/usr/share/bochs/BIOS-bochs-latest
 vgaromimage:        file=/usr/share/bochs/VGABIOS-lgpl-latest
 # ata0-master:        type=cdrom, path=os.iso, status=inserted
-floppya:            1_44=floppy.img, status=inserted
+floppya:            1_44=os.img, status=inserted
 boot:               floppy, cdrom, disk
 clock:              sync=realtime, time0=local
 cpu:                count=1, ips=1000000

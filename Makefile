@@ -28,7 +28,13 @@ $(DRIVERS):
 	@make -C drivers
 
 run: os.img
+	qemu-system-i386 -drive format=raw,file=$< -display sdl -monitor stdio
+
+qemu: os.img
 	qemu-system-i386 -drive format=raw,file=$< -display sdl -s -S -monitor stdio
+
+bochs: os.img
+	bochs -f bochsrc
 
 kernel.bin: kernel.o $(DRIVERS)
 	$(LD) $(LDFLAGS) $^ -o $@
