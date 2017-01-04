@@ -9,6 +9,13 @@ void memcpy(char *dest, char *src, int len)
     }
 }
 
+void memset(char *dst, char c, int len)
+{
+    while(len-- > 0){
+        *dst++ = c;
+    }
+}
+
 int get_cursor()
 {
     outb(REG_SCREEN_CTRL, CURSOR_LOC_HIGH);
@@ -34,14 +41,11 @@ int handle_scrolling(int cursor_offset)
         return cursor_offset;
     }
 
-    int i;
     char * vidmem = (char *)VIDEO_MEMORY;
-    for(i = 1; i < MAX_ROWS; i++){
-        memcpy(get_screen_offset(0, i-1) + vidmem, get_screen_offset(0, i) + vidmem, MAX_COLS * 2);
-    }
+    memcpy(vidmem + get_screen_offset(0, 0), vidmem + get_screen_offset(0, 1) , MAX_COLS * (MAX_ROWS -1) * 2);
 
-    char *last_line = get_screen_offset(0, MAX_ROWS -1) + vidmem;
-
+    char *last_line = vidmem + get_screen_offset(0, MAX_ROWS -1);
+    int i;
     for(i = 0; i < MAX_COLS * 2; i++)
         last_line[i] = 0;
 
