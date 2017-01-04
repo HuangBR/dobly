@@ -14,10 +14,13 @@
 #define CURSOR_LOC_LOW  0x0F
 
 void print(char *);
+void print_char(char, int, int, char);
 
 #define get_screen_offset(col, row) (((row) *80 + (col)) * 2)
 
 int get_cursor();
 void set_cursor(int);
+
+void clear_screen();
 
 #endif /* _SCREEN_H */
