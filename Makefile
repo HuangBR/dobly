@@ -2,10 +2,11 @@
 #
 #
 GCC = gcc
-CFLAGS = -ffreestanding -O2 -m32 -g -W -Wall -nostdinc -fno-builtin -fno-stack-protector 
+CFLAGS = -ffreestanding -O2 -m32 -g -W -Wall -nostdinc -fno-builtin -fno-stack-protector -fomit-frame-pointer
 
 LD = ld
-LDFLAGS = -Ttext 0x1000 --oformat binary -m elf_i386 -nostdlib 
+#LDFLAGS = -Ttext 0x1000 --oformat binary -m elf_i386 -nostdlib 
+LDFLAGS = -m elf_i386 -nostdlib
 
 AS = nasm
 ASFLAGS = -f bin -g
@@ -37,7 +38,12 @@ bochs: os.img
 	bochs -f bochsrc
 
 kernel.bin: kernel.o $(DRIVERS)
-	$(LD) $(LDFLAGS) $^ -o $@
+	$(LD) $(LDFLAGS) -T kernel.ld $^ -o $@
+	#$(LD) $(LDFLAGS) $^ -o $@
+
+disasm: kernel.bin
+	objdump -mi386 -M i386,intel -b binary -D $<
+	ndisasm -b 32 -o1000h -a $<
 
 print_string.o: print_string.asm
 	$(AS) -f elf -F dwarf $^ -o $@
@@ -57,5 +63,5 @@ debug:
 .PHONY: clean
 
 clean:
-	$(RM) *.o *.bin os.img $(MAIN) .*.swp
+	$(RM) *.o *.bin os.img $(MAIN) .*.swp *.log
 	@make -C drivers clean
