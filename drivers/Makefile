@@ -4,6 +4,7 @@
 
 CC = gcc
 CFLAGS = -Wall -Wextra -ffreestanding -g -fno-stack-protector -nostdinc -O2 -m32
+INCLUDES = -I../include/
 
 SRCS = screen.c common.c
 
@@ -12,8 +13,8 @@ OBJS = $(SRCS:.c=.o)
 all: $(OBJS)
 
 
-*.o: *.c
-	$(CC) $(CFLAGS) -c $< -o $@
+%.o: %.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c $< -o $@
 
 .PHONY: clean
 

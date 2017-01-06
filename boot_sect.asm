@@ -10,6 +10,12 @@ mov sp, bp
 mov bx, MSG_REAL_MODE
 call print_string
 
+mov ax, 0x2402
+int 0x15
+mov ah, 0x0e
+add al, '0'
+int 0x10
+
 call load_kernel
 
 call switch_to_pm
@@ -22,6 +28,7 @@ jmp $
 %include "pm/gdt.asm"
 %include "pm/print_string_pm.asm"
 %include "pm/switch_to_pm.asm"
+%include "pm/idt.asm"
 
 [bits 16]
 load_kernel:
@@ -39,6 +46,10 @@ BEGIN_PM:
     mov ebx, MSG_PROT_MODE
     call print_string_pm
     
+    cli
+    lidt [idt_descriptor]
+    sti
+
     call KERNEL_OFFSET
 
     jmp $
