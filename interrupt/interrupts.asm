@@ -45,6 +45,17 @@ _int%1:
     pop ds
     popa
     iret
+
 %endmacro
 
-_int_macro 00
+%define zero_prefix(x)   0 %+ x
+
+%assign i 0
+%rep 19
+    %if i < 10
+        _int_macro zero_prefix(i)
+    %else
+        _int_macro i
+    %endif
+%assign i i+1
+%endrep

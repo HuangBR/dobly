@@ -1,17 +1,23 @@
 #include "idt.h"
 #include "interrupts.h"
 
+struct idtr_struct idtr;
 struct idt_desc_struct idt[256];
 
 void load_idtr()
 {
-    struct idtr_struct idtr;
     idtr.limit = 256 * (sizeof(struct idt_desc_struct) - 1),
     idtr.base  = idt;
 
     __asm__ volatile ("LIDT (%0)":: "p"(&idtr));
 }
 
+/*
+ * @num: interrupt vector
+ * @handler: interrupt handler
+ * @dpl: descriptor privilege level
+ *
+ */
 void add_interrupt(int num, interrupt_func_t handler, u32 dpl)
 {
     u16 selector = 0x08;
