@@ -8,4 +8,5 @@ void main()
     print("welcome to dobly's world\n");
 //    print_char('c', 1, 1, WHITE_ON_BLACK);
     print("h");
+
 }
