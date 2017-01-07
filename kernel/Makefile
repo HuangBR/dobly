@@ -4,6 +4,7 @@
 
 GCC = gcc
 CFLAGS = -ffreestanding -O2 -m32 -g -W -Wall -nostdinc -fno-builtin -fno-stack-protector -fomit-frame-pointer
+INCLUDE = -I../include
 
 LD = ld
 LDFLAGS = -Ttext 0x1000 --oformat binary -m elf_i386 -nostdlib 
@@ -21,7 +22,7 @@ MAIN = kernel.bin
 all: $(OBJS)
 
 %.o: %.c
-	$(GCC) $(CFLAGS) -c $< -o $@	
+	$(GCC) $(INCLUDE) $(CFLAGS) -c $< -o $@	
 
 .PHONY: all clean
 
