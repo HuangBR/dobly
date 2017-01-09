@@ -2,31 +2,54 @@
 #
 #
 GCC = gcc
-CFLAGS = -ffreestanding -O2 -m32 -g -W -Wall -nostdinc -fno-builtin -fno-stack-protector -fomit-frame-pointer
+#CFLAGS = -ffreestanding -O2 -m32 -g -W -Wall -nostdinc -fno-builtin -fno-stack-protector -fomit-frame-pointer
+CFLAGS = -ffreestanding -O2 -g -W -Wall -m32
+export CFLAGS
 
 LD = ld
-LDFLAGS = -Ttext 0x1000 --oformat binary -m elf_i386 -nostdlib 
+#LDFLAGS = -Ttext 0x1000 --oformat binary -m elf_i386 -nostdlib 
+LDFLAGS = -Ttext 0x1000 --oformat binary -m elf_i386
 # LDFLAGS = -m elf_i386 -nostdlib
 
 AS = nasm
-ASFLAGS = -f bin -g
+MAIN_ASFLAGS = -f bin -g
+ASFLAGS = -f elf32 -g
+export ASFLAGS
 
-SRCS := boot_sect.asm
+
+SRCS_ASM := boot_sect.asm
+
+SRCS_KERNEL    := $(addprefix kernel/, kernel.c trap.c) 
+SRCS_DRIVERS   := $(addprefix drivers/, io.c screen.c)
+SRCS_INTERRUPT := $(addprefix interrupt/, idt.c pic.c)
+
+SRCS_C := $(SRCS_KERNEL) $(SRCS_DRIVERS) $(SRCS_INTERRUPT)
+
+
+OBJS_KERNEL    := $(SRCS_KERNEL:.c=.o)
+OBJS_DRIVERS   := $(SRCS_DRIVERS:.c=.o)
+OBJS_INTERRUPT := $(SRCS_INTERRUPT:.c=.o) $(addprefix interrupt/, interrupts.o)
+
+OBJS := $(OBJS_KERNEL) $(OBJS_DRIVERS) $(OBJS_INTERRUPT)
 
 MAIN = boot_sect.bin
 
-DRIVERS = $(addprefix drivers/, common.o screen.o)
-
 all : os.img
 
-$(MAIN): $(SRCS)
-	$(AS) $(ASFLAGS) $^ -o $@
+$(MAIN): $(SRCS_ASM)
+	$(AS) $(MAIN_ASFLAGS) $^ -o $@
 
 os.img : $(MAIN) kernel.bin
 	cat $^ > $@
 
-$(DRIVERS):
+$(OBJS_DRIVERS):
 	@make -C drivers
+
+$(OBJS_KERNEL):
+	@make -C kernel
+
+$(OBJS_INTERRUPT):
+	@make -C interrupt
 
 run: os.img
 	qemu-system-i386 -drive format=raw,file=$< -display sdl -monitor stdio
@@ -37,7 +60,7 @@ qemu: os.img
 bochs: os.img
 	bochs -f bochsrc
 
-kernel.bin: kernel.o $(DRIVERS)
+kernel.bin: $(OBJS)
 	# $(LD) $(LDFLAGS) -T kernel.ld $^ -o $@
 	$(LD) $(LDFLAGS) $^ -o $@
 
@@ -55,13 +78,15 @@ gdb: print_string
 	gdb -x gdbsrc $^
 
 debug: 
-	gdb -x script.gdb
+	gdb -nx -x .gdbinit
 	
 *.o:*.c
 	$(GCC) $(CFLAGS) -c $< -o $@	
 
-.PHONY: clean
+.PHONY: all clean 
 
 clean:
 	$(RM) *.o *.bin os.img $(MAIN) .*.swp *.log
-	@make -C drivers clean
+	@make -C drivers   clean
+	@make -C kernel    clean
+	@make -C interrupt clean

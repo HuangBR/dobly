@@ -3,11 +3,11 @@
 #
 
 GCC = gcc
-CFLAGS = -ffreestanding -O2 -m32 -g -W -Wall -nostdinc -fno-builtin -fno-stack-protector -fomit-frame-pointer
+#CFLAGS = -ffreestanding -O2 -m32 -g -W -Wall -nostdinc -fno-builtin -fno-stack-protector 
 INCLUDE = -I../include
 
-LD = ld
-LDFLAGS = -Ttext 0x1000 --oformat binary -m elf_i386 -nostdlib 
+#LD = ld
+#LDFLAGS = -Ttext 0x1000 --oformat binary -m elf_i386 -nostdlib 
 # LDFLAGS = -m elf_i386 -nostdlib
 
 AS = nasm

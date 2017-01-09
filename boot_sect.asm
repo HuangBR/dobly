@@ -35,15 +35,15 @@ load_kernel:
     call print_string
 
     mov bx, KERNEL_OFFSET ; set kernel load position in memory
-    mov dh, 2            ; set number of sectors read
+    mov dh, 1            ; set number of sectors read
     mov dl, [BOOT_DRIVE]  ; set read driver
     call disk_load
     ret
 
 [bits 32]
 BEGIN_PM:
-    mov ebx, MSG_PROT_MODE
-    call print_string_pm
+;    mov ebx, MSG_PROT_MODE
+;    call print_string_pm
     
     call KERNEL_OFFSET
 

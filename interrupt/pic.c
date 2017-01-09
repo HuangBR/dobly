@@ -1,26 +1,26 @@
 #include <types.h>
 #include <io.h>
-#include "pic.h"
+#include <pic.h>
 
-void remap_pic(int pci1, int pci2)
+void remap_pic(int pic1, int pic2)
 {
     u8 md, sd;
 
     md = inb(PIC1_DATA);
     sd = inb(PIC2_DATA);
 
-    outb(PIC1_, EOI);      /* send EOI reset the chip */
+    outb(PIC1_CMD, EOI);      /* send EOI reset the chip */
 
-    outb(PIC1_, ICW1_INIT + ICW1_ICW4);
-    outb(PIC2_, ICW1_INIT + ICW1_ICW4);
+    outb(PIC1_CMD, ICW1_INIT + ICW1_ICW4); /* starts the initialization sequence (in cascade mode) */
+    outb(PIC2_CMD, ICW1_INIT + ICW1_ICW4);
 
-    outb(PIC1_DATA, pic1);
-    outb(PIC2_DATA, pic2);
+    outb(PIC1_DATA, pic1); /* ICW2: Master PIC vector offset */
+    outb(PIC2_DATA, pic2); /* ICW2: Slave PIC vector offset  */
 
-    outb(PIC1_DATA, 0x04);
-    outb(PIC2_DATA, 0x02);
+    outb(PIC1_DATA, 0x04); /* ICW3: tell Master PIC that there is a slave PIC at IRQ2 (0000 0100) */
+    outb(PIC2_DATA, 0x02); /* ICW3: tell Slave PIC its cascade identity (0000 0010) */
 
-    outb(PIC1_DATA, ICW4_8086);
+    outb(PIC1_DATA, ICW4_8086); /* ICW4 */
     outb(PIC2_DATA, ICW4_8086);
 
     outb(PIC1_DATA, md);
@@ -65,3 +65,4 @@ void umask_irq(u8 irq)
         outb(port, value);
     }
 }
+

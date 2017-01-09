@@ -10,7 +10,9 @@ void lidt()
     idtr.limit = 256 * (sizeof(struct gate_desc_struct) - 1),
     idtr.base  = idt;
 
-    __asm__ volatile ("LIDT (%0)":: "p"(&idtr));
+    struct idtr_struct *pidtr = &idtr;
+
+    __asm__ volatile ("LIDT (%0) ":: "r" (pidtr));
 }
 
 /*

@@ -49,20 +49,20 @@
 #define ICW4_PIC1       0x04               /* this is the Master PIC */
 #define ICW4_BUF_SLAVE  0x08               /* Buffered Mode  slave */
 #define ICW4_BUF_MASTER 0x0C               /* Buffered Mode  master */
-#define ICW4_BUF
 #define ICW4_SFNM       0x10               /* Special Fully Nested Mode */
 
 void remap_pic(int pic1, int pic2);
 void mask_irq(BYTE irq);
 void umask_irq(BYTE irq);
 
-inline void sti(){
-    __asm__ ("sti\n");
+static inline void sti(void)
+{
+    __asm__ ("sti");
 }
 
-inline void cli()
+static inline void cli(void)
 {
-    __asm__ ("cli\n");
+    __asm__ ("cli");
 }
 
 #endif /* _PIC_H */
