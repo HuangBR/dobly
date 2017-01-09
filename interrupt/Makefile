@@ -10,7 +10,7 @@ INCLUDE = -I../include
 AS = nasm
 ASFLAGS = -f elf32 -g 
 
-SRCS = idt.c
+SRCS = idt.c 
 
 OBJS = $(SRCS:.c=.o) interrupts.o
 

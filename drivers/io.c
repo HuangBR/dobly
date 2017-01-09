@@ -1,4 +1,5 @@
-#include "common.h"
+#include "types.h"
+#include "io.h"
 
 void outb(u16 port, u8 value)
 {

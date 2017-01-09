@@ -6,7 +6,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -ffreestanding -g -fno-stack-protector -nostdinc -O2 -m32
 INCLUDES = -I../include/
 
-SRCS = screen.c common.c
+SRCS = screen.c io.c
 
 OBJS = $(SRCS:.c=.o)
 

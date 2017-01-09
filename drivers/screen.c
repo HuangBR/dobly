@@ -1,5 +1,6 @@
-#include "common.h"
-#include "screen.h"
+#include "types.h"
+#include "io.h"
+#include "drivers/screen.h"
 
 
 void memcpy(char *dest, char *src, int len)

@@ -13,7 +13,7 @@ LDFLAGS = -Ttext 0x1000 --oformat binary -m elf_i386 -nostdlib
 AS = nasm
 ASFLAGS = -f bin -g
 
-SRCS := kernel.c panic.c
+SRCS := kernel.c trap.c
 
 OBJS = $(SRCS:.c=.o)
 
