@@ -10,8 +10,9 @@ mov sp, bp
 mov bx, MSG_REAL_MODE
 call print_string
 
-mov ax, 0x2402
-int 0x15
+; enable A20
+; mov ax, 0x2402
+; int 0x15
 mov ah, 0x0e
 add al, '0'
 int 0x10
@@ -35,15 +36,15 @@ load_kernel:
     call print_string
 
     mov bx, KERNEL_OFFSET ; set kernel load position in memory
-    mov dh, 1            ; set number of sectors read
+    mov dh, 23            ; set number of sectors read
     mov dl, [BOOT_DRIVE]  ; set read driver
     call disk_load
     ret
 
 [bits 32]
 BEGIN_PM:
-;    mov ebx, MSG_PROT_MODE
-;    call print_string_pm
+    mov ebx, MSG_PROT_MODE
+    call print_string_pm
     
     call KERNEL_OFFSET
 

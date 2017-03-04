@@ -9,22 +9,25 @@ void remap_pic(int pic1, int pic2)
     md = inb(PIC1_DATA);
     sd = inb(PIC2_DATA);
 
-    outb(PIC1_CMD, EOI);      /* send EOI reset the chip */
-
     outb(PIC1_CMD, ICW1_INIT + ICW1_ICW4); /* starts the initialization sequence (in cascade mode) */
     outb(PIC2_CMD, ICW1_INIT + ICW1_ICW4);
 
-    outb(PIC1_DATA, pic1); /* ICW2: Master PIC vector offset */
-    outb(PIC2_DATA, pic2); /* ICW2: Slave PIC vector offset  */
+    outb(PIC1_DATA, pic1); /* ICW2: new Master PIC vector offset */
+    outb(PIC2_DATA, pic2); /* ICW2: new Slave PIC vector offset  */
 
     outb(PIC1_DATA, 0x04); /* ICW3: tell Master PIC that there is a slave PIC at IRQ2 (0000 0100) */
     outb(PIC2_DATA, 0x02); /* ICW3: tell Slave PIC its cascade identity (0000 0010) */
 
-    outb(PIC1_DATA, ICW4_8086); /* ICW4 */
+    outb(PIC1_DATA, ICW4_8086); /* ICW4  fully nested mode, non-buffered mode, normal EOI, IA processor*/
     outb(PIC2_DATA, ICW4_8086);
 
+    /* restore interrupt mask register */
     outb(PIC1_DATA, md);
     outb(PIC2_DATA, sd);
+
+    /* End of interrupt */
+    outb(PIC1_CMD, EOI);
+    outb(PIC2_CMD, EOI);
 }
 
 void mask_irq(u8 irq)

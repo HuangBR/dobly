@@ -41,6 +41,7 @@ $(MAIN): $(SRCS_ASM)
 
 os.img : $(MAIN) kernel.bin
 	cat $^ > $@
+	truncate -s 12K $@
 
 $(OBJS_DRIVERS):
 	@make -C drivers
@@ -50,6 +51,9 @@ $(OBJS_KERNEL):
 
 $(OBJS_INTERRUPT):
 	@make -C interrupt
+
+compile: $(OBJS_DRIVERS) $(OBJS_KERNEL) $(OBJS_INTERRUPT)
+	@echo compile finished
 
 run: os.img
 	qemu-system-i386 -drive format=raw,file=$< -display sdl -monitor stdio

@@ -6,8 +6,9 @@ set architecture i8086
 layout split
 layout regs
 break *0x7c00
-break *0x7cd2
-break *0x7ce2
+break *0x7c18
+break *0x7cd7
 break *0x7cfc
-break *0x7cd1
-break *0x1386
+break *0x7d02
+break *0x7d18
+break *0x1000

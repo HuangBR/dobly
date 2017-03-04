@@ -1,6 +1,22 @@
 #ifndef _IDT_H
 #define _IDT_H
 
+/* Suitable irq bases for hardware interrupts.  Reprogram the 8259(s) from
+ * the PC BIOS defaults since the BIOS doesn't respect all the processor's
+ * reserved vectors (0 to 31).
+ */
+#define BIOS_IRQ0_VEC   0x08    /* base of IRQ0-7 vectors used by BIOS */
+#define BIOS_IRQ8_VEC   0x70    /* base of IRQ8-15 vectors used by BIOS */
+#define IRQ0_VECTOR     0x50    /* nice vectors to relocate IRQ0-7 to */
+#define IRQ8_VECTOR     0x70    /* no need to move IRQ8-15 */
+
+/* Interrupt number to hardware vector. */
+#define BIOS_VECTOR(irq)        \
+            (((irq) < 8 ? BIOS_IRQ0_VEC : BIOS_IRQ8_VEC) + ((irq) & 0x07))
+#define VECTOR(irq)     \
+            (((irq) < 8 ? IRQ0_VECTOR : IRQ8_VECTOR) + ((irq) & 0x07))
+
+
 /*
  * Interrupt types
  */

@@ -12,7 +12,6 @@ void main()
     clear_screen();
     
     print("kernel is loaded \n");
-    goto out;
 
     cli();
     
@@ -23,22 +22,26 @@ void main()
     trap_init();
     print("interruptions loaded\n");
 
-//    add_interrupt(48, int32, STS_IG32, 3);
-    // set_cursor(get_screen_offset(30, 15));
+    add_interrupt(48, int32, STS_IG32, 3);
+    set_cursor(get_screen_offset(30, 15));
     lidt();
     print("IDT installed\n");
 
     sti();
+
     print("welcome to dobly's world\n");
-    __asm__("int $48");
+loop:
+//    goto loop;
+//    __asm__("int $48");
 
 out:
+    goto out;
     return;
 }
 
 void int_32()
 {
-    clear_screen();
+    // clear_screen();
     print("test_int called\n");
 }
 

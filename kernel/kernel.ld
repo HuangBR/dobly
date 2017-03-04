@@ -1,10 +1,17 @@
 OUTPUT_FORMAT("binary")
-/* TARGET("elf_i386") */
+TARGET("binary")
 /* ENTRY(main) */
 SECTIONS
 {
-  .text  0x1000 : {
-    *(.text)
+  . = 0x1000;
+  .text : { 
+      *(.text)
+  }
+  .data : {
+      *(.data)
+  }
+  .bss : {
+      *.(.bss)
   }
 }
 
