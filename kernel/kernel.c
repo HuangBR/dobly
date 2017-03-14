@@ -5,7 +5,7 @@
 #include "traps.h"
 #include "drivers/screen.h"
 
-//void int_32(void);
+void int_32(void);
 
 void main()
 {
@@ -22,17 +22,24 @@ void main()
     trap_init();
     print("interruptions loaded\n");
 
-    add_interrupt(48, int32, STS_IG32, 3);
-    set_cursor(get_screen_offset(30, 15));
+    for(int i = 0; i < 255; i++){
+        add_interrupt(i, int32, STS_IG32, 3);
+    }
     lidt();
     print("IDT installed\n");
 
     sti();
 
     print("welcome to dobly's world\n");
-loop:
-//    goto loop;
-//    __asm__("int $48");
+
+    __asm__ ("pushl %ebx            \n"
+            "pushf                  \n"
+            "movl %esp, %ebx        \n"
+            "orl $0x0100, (%ebx)    \n"
+            "popf                   \n"
+            "popl %ebx                "
+            );
+    __asm__("int $0");
 
 out:
     goto out;
@@ -41,7 +48,7 @@ out:
 
 void int_32()
 {
-    // clear_screen();
+    __asm__ ("sti");
     print("test_int called\n");
 }
 
