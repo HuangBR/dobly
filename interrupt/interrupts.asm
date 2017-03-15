@@ -59,5 +59,3 @@ int%1:
     %endif
 %assign i i+1
 %endrep
-
-_int_macro 32

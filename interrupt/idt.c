@@ -16,22 +16,21 @@ void lidt()
 }
 
 /*
- * @num: interrupt vector
+ * @num: interrupt vector 0-255
  * @handler: handler address
- * @istrap: 1 for a trap(exception) and 0 for interrupt 
+ * @type: STS_TG32 for expection and STS_IG32 for interrupt
  * @dpl: descriptor privilege level
  *
  */
-void add_interrupt(int num, interrupt_func_t handler, u8 is_trap, u8 dpl)
+void add_interrupt(int num, interrupt_func_t handler, u8 type, u8 dpl)
 {
     u32 offset = (u32) handler;
     
-    num--;
     idt[num].low_offset   = (u16)(offset & 0xffff);
     idt[num].cs = 0x8;
     idt[num].resv = 0;
     idt[num].args = 0;
-    idt[num].type = is_trap ? STS_TG32 : STS_IG32;
+    idt[num].type = type;
     idt[num].dpl = dpl;
     idt[num].s   = 0;
     idt[num].p = 1;

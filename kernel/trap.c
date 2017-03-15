@@ -15,12 +15,11 @@ void trap_init(void)
 {
 
     add_interrupt(0, int00, STS_IG32, 0);
-
 }
 
 void panic(char *message, char *code, bool halt)
 {
-    clear_screen();
+//    clear_screen();
     print("system error\n");
     print(message);
     print("\n");

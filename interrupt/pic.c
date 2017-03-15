@@ -2,18 +2,19 @@
 #include <io.h>
 #include <pic.h>
 
-void remap_pic(int pic1, int pic2)
+void intr_init()
 {
     u8 md, sd;
 
+    /* remap interrupt to 0x20 */
     md = inb(PIC1_DATA);
     sd = inb(PIC2_DATA);
 
     outb(PIC1_CMD, ICW1_INIT + ICW1_ICW4); /* starts the initialization sequence (in cascade mode) */
     outb(PIC2_CMD, ICW1_INIT + ICW1_ICW4);
 
-    outb(PIC1_DATA, pic1); /* ICW2: new Master PIC vector offset */
-    outb(PIC2_DATA, pic2); /* ICW2: new Slave PIC vector offset  */
+    outb(PIC1_DATA, IRQ0_VECTOR); /* ICW2: new Master PIC vector offset */
+    outb(PIC2_DATA, IRQ8_VECTOR); /* ICW2: new Slave PIC vector offset  */
 
     outb(PIC1_DATA, 0x04); /* ICW3: tell Master PIC that there is a slave PIC at IRQ2 (0000 0100) */
     outb(PIC2_DATA, 0x02); /* ICW3: tell Slave PIC its cascade identity (0000 0010) */
@@ -28,6 +29,16 @@ void remap_pic(int pic1, int pic2)
     /* End of interrupt */
     outb(PIC1_CMD, EOI);
     outb(PIC2_CMD, EOI);
+
+    /* copy BIOS vectors to  new location, so we can still make BIOS call*/
+#if BIOS_IRQ0_VEC != IRQ0_VECTOR
+    memcpy(BIOS_VECTOR(0) * 4, VECTOR(0) * 4, 4 * 8);
+#endif
+
+#if  BIOS_IRQ8_VEC != IRQ8_VECTOR
+    memcpy(BIOS_VECTOR(8) * 4, VECTOR(8) * 4, 4 * 8);
+#endif
+
 }
 
 void mask_irq(u8 irq)
