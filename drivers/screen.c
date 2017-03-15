@@ -2,21 +2,6 @@
 #include "io.h"
 #include "drivers/screen.h"
 
-
-void memcpy(char *dest, char *src, int len)
-{
-    while(len-- > 0){
-        *dest++ = *src++;
-    }
-}
-
-void memset(char *dst, char c, int len)
-{
-    while(len-- > 0){
-        *dst++ = c;
-    }
-}
-
 int get_cursor()
 {
     outb(REG_SCREEN_CTRL, CURSOR_LOC_HIGH);

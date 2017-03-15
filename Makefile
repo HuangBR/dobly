@@ -22,15 +22,18 @@ SRCS_ASM := boot_sect.asm
 SRCS_KERNEL    := $(addprefix kernel/, kernel.c trap.c) 
 SRCS_DRIVERS   := $(addprefix drivers/, io.c screen.c)
 SRCS_INTERRUPT := $(addprefix interrupt/, idt.c pic.c)
+SRCS_MM		   := $(addprefix mm/, mem.c)
 
-SRCS_C := $(SRCS_KERNEL) $(SRCS_DRIVERS) $(SRCS_INTERRUPT)
+SRCS_C := $(SRCS_KERNEL) $(SRCS_DRIVERS) $(SRCS_INTERRUPT) \
+		$(SRCS_MM)
 
 
 OBJS_KERNEL    := $(SRCS_KERNEL:.c=.o)
 OBJS_DRIVERS   := $(SRCS_DRIVERS:.c=.o)
 OBJS_INTERRUPT := $(SRCS_INTERRUPT:.c=.o) $(addprefix interrupt/, interrupts.o)
+OBJS_MM		   := $(SRCS_MM:.c=.o)
 
-OBJS := $(OBJS_KERNEL) $(OBJS_DRIVERS) $(OBJS_INTERRUPT)
+OBJS := $(OBJS_KERNEL) $(OBJS_DRIVERS) $(OBJS_INTERRUPT) $(OBJS_MM)
 
 MAIN = boot_sect.bin
 
@@ -51,6 +54,9 @@ $(OBJS_KERNEL):
 
 $(OBJS_INTERRUPT):
 	@make -C interrupt
+
+$(OBJS_MM):
+	@make -C mm
 
 compile: $(OBJS_DRIVERS) $(OBJS_KERNEL) $(OBJS_INTERRUPT)
 	@echo compile finished
@@ -94,3 +100,4 @@ clean:
 	@make -C drivers   clean
 	@make -C kernel    clean
 	@make -C interrupt clean
+	@make -C mm		   clean

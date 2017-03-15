@@ -19,9 +19,12 @@ typedef unsigned int DWORD;
 
 typedef unsigned int size_t;
 
-#define true    (1)
-#define false   (0)
+enum {
+    false = 0,
+    true  = 1
+};
 
+#undef  NULL
 #define NULL ((void*)0)
 
 typedef uint bool;
