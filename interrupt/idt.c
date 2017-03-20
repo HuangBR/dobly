@@ -22,7 +22,7 @@ void lidt()
  * @dpl: descriptor privilege level
  *
  */
-void add_interrupt(int num, interrupt_func_t handler, u8 type, u8 dpl)
+void set_gate(int num, void *handler, u8 type, u8 dpl)
 {
     u32 offset = (u32) handler;
     

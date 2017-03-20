@@ -14,12 +14,11 @@
 void trap_init(void)
 {
 
-    add_interrupt(0, int00, STS_IG32, 0);
+    set_gate(0, int00, STS_IG32, 0);
 }
 
 void panic(char *message, char *code, bool halt)
 {
-//    clear_screen();
     print("system error\n");
     print(message);
     print("\n");
@@ -40,97 +39,97 @@ void panic(char *message, char *code, bool halt)
 /*
  * Exception Handlers
  */
-void int_00(void)
+void do_divide_error(void)
 {
     panic("Divide By Zero Error","#00", false);
 }
 
-void int_01(void)
+void do_debug(void)
 {
     panic("Debug Error","#DB", false);
 }
 
-void int_02(void)
+void do_nmi(void)
 {
     panic("NMI Interrupt","#--", false);
 }
 
-void int_03(void)
+void do_breakpoint(void)
 {
     panic("Breakpoint","#BP", false);
 }
 
-void int_04(void)
+void do_overflow(void)
 {
     panic("Overflow","#OF", false);
 }
 
-void int_05(void)
+void do_bounds(void)
 {
     panic("BOUND Range Exceeded","#BR", false);
 }
 
-void int_06(void)
+void do_invalid_op(void)
 {
     panic("Invalid Opcode","#UD", false);
 }
 
-void int_07(void)
+void do_device_not_available(void)
 {
     panic("Device Not Available","#NM", false);
 }
 
-void int_08(void)
+void do_double_fault(void)
 {
     panic("Double Fault","#DF", true);
 }
 
-void int_09(void)
+void do_coprocessor_segment_overrun(void)
 {
     panic("Coprocessor Segment Overrun", "#NA", false);
 }
 
-void int_10(void)
+void do_invalid_TSS(void)
 {
     panic("Invalid TSS","#TS", false);
 }
 
-void int_11(void)
+void do_segment_not_present(void)
 {
     panic("Segment Not Present","#NP", false);
 }
 
-void int_12(void)
+void do_stack_segment(void)
 {
     panic("Stack Segment Fault","#SS", false);
 }
 
-void int_13(void)
+void do_protection(void)
 {
     panic("Gneral Protection Fault","#GP", false);
 }
 
-void int_14(void)
+void do_coprocessor_error(void)
 {
     panic("Page Fault","#PF", false);
 }
 
-void int_16(void)
+void do_math_fault(void)
 {
     panic("FPU Floating-Point Error","#MF", false);
 }
 
-void int_17(void)
+void do_align_check(void)
 {
     panic("Alignment Check","#AC", false);
 }
 
-void int_18(void)
+void do_machine_check(void)
 {
     panic("Machine Check","#MC", true);
 }
 
-void int_19(void)
+void do_SIMD_FP(void)
 {
     panic("SIMD Floating-Point","#XF", false);
 }

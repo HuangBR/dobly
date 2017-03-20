@@ -13,9 +13,6 @@ call print_string
 ; enable A20
 ; mov ax, 0x2402
 ; int 0x15
-mov ah, 0x0e
-add al, '0'
-int 0x10
 
 call load_kernel
 

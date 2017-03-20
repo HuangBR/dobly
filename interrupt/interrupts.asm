@@ -25,10 +25,9 @@
 ; 21-31 Reserved
 ; 32-255    Maskable Interrupts External interrupt from INTR pin or INT n instruction.
 
-%macro _int_macro 1
 [extern int_%1]
+[extern DATA_SEG]
 [global int%1]
-int%1:
     pusha
     push ds
     push es
@@ -38,7 +37,7 @@ int%1:
     mov ds, eax
     mov es, eax
     cld
-    call int_%1; divide by zero
+    call int_%1     ; divide by zero
     pop gs
     pop fs
     pop es
@@ -46,16 +45,3 @@ int%1:
     popa
     iret
 
-%endmacro
-
-%define zero_prefix(x)   0 %+ x
-
-%assign i 0
-%rep 19
-    %if i < 10
-        _int_macro zero_prefix(i)
-    %elif i <> 15 
-        _int_macro i
-    %endif
-%assign i i+1
-%endrep

@@ -18,8 +18,7 @@
 #define STS_TG32    0xF /* 32-bits trap gate */
 
 #define DPL_USER    0x3     // User DPL
-
-typedef void (*interrupt_func_t) ();
+#define DPL_SYS     0x0
 
 struct gate_desc_struct {
     u32 low_offset : 16;  /* low 16 bits of offset in segment */ 
@@ -39,6 +38,15 @@ struct idtr_struct {
 } __attribute__ ((packed));
 
 void lidt();
-void add_interrupt(int , interrupt_func_t, u8, u8);
+void set_gate(int vector, void *handler, u8 type, u8 dpl);
+
+#define set_intr_gate(n, handler) \
+    set_gate(n, handler, STS_IG32, DPL_SYS)
+
+#define set_trap_gate(n, handler) \
+    set_gate(n, handler, STS_TG32, DPL_SYS)
+
+#define set_syscall_gate(n, handler) \
+    set_gate(n, handler, STS_TG32, DPL_USER)
 
 #endif /* _IDT_H */
