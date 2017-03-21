@@ -46,7 +46,7 @@ void set_gate(int vector, void *handler, u8 type, u8 dpl);
 #define set_trap_gate(n, handler) \
     set_gate(n, handler, STS_TG32, DPL_SYS)
 
-#define set_syscall_gate(n, handler) \
+#define set_system_gate(n, handler) \
     set_gate(n, handler, STS_TG32, DPL_USER)
 
 #endif /* _IDT_H */

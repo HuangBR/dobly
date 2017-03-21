@@ -32,11 +32,11 @@ void intr_init()
 
     /* copy BIOS vectors to  new location, so we can still make BIOS call*/
 #if BIOS_IRQ0_VEC != IRQ0_VECTOR
-    memcpy(BIOS_VECTOR(0) * 4, VECTOR(0) * 4, 4 * 8);
+    memcpy((void *) (BIOS_VECTOR(0) * 4), (void *) (VECTOR(0) * 4), 4 * 8);
 #endif
 
 #if  BIOS_IRQ8_VEC != IRQ8_VECTOR
-    memcpy(BIOS_VECTOR(8) * 4, VECTOR(8) * 4, 4 * 8);
+    memcpy((void *) (BIOS_VECTOR(8) * 4), (void *) (VECTOR(8) * 4), 4 * 8);
 #endif
 
 }

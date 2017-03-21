@@ -28,9 +28,9 @@ SRCS_C := $(SRCS_KERNEL) $(SRCS_DRIVERS) $(SRCS_INTERRUPT) \
 		$(SRCS_MM)
 
 
-OBJS_KERNEL    := $(SRCS_KERNEL:.c=.o)
+OBJS_KERNEL    := $(SRCS_KERNEL:.c=.o) $(addprefix kernel/, traps.o)
 OBJS_DRIVERS   := $(SRCS_DRIVERS:.c=.o)
-OBJS_INTERRUPT := $(SRCS_INTERRUPT:.c=.o) $(addprefix interrupt/, interrupts.o)
+OBJS_INTERRUPT := $(SRCS_INTERRUPT:.c=.o) 
 OBJS_MM		   := $(SRCS_MM:.c=.o)
 
 OBJS := $(OBJS_KERNEL) $(OBJS_DRIVERS) $(OBJS_INTERRUPT) $(OBJS_MM)

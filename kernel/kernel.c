@@ -27,6 +27,7 @@ void main()
 
     print("welcome to dobly's world\n");
 
+    __asm__ ("int $0x03\n");
 
 out:
     goto out;

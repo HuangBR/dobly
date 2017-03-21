@@ -12,18 +12,17 @@ AS = nasm
 
 SRCS = idt.c pic.c
 
-OBJS = $(SRCS:.c=.o) interrupts.o
+OBJS = $(SRCS:.c=.o) 
 
 all: $(OBJS)
 	@echo compile finished
-
-%.o: %.asm
-	$(AS) $(ASFLAGS) $< -o $@
 
 %.o: %.c
 	$(CC) $(INCLUDE) $(CFLAGS) -c $< -o $@
 
 .PHONY: all clean
+
+pic.c: ../mm/mm.h
 
 clean:
 	$(RM) *.o .*.swp

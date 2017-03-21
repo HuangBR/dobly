@@ -11,18 +11,19 @@ INCLUDE = -I../include
 # LDFLAGS = -m elf_i386 -nostdlib
 
 AS = nasm
-ASFLAGS = -f bin -g
+ASFLAGS = -f elf32 -g
 
 SRCS := kernel.c trap.c
 
-OBJS = $(SRCS:.c=.o)
-
-MAIN = kernel.bin
+OBJS = $(SRCS:.c=.o) traps.o
 
 all: $(OBJS)
 
 %.o: %.c
 	$(GCC) $(INCLUDE) $(CFLAGS) -c $< -o $@	
+
+%.o: %.asm
+	$(AS) $(ASFLAGS) $< -o $@
 
 .PHONY: all clean
 
