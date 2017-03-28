@@ -18,10 +18,10 @@ void main()
     print("8259 pic remapped\n");
 
     trap_init();
-    print("interruptions initialize finished\n");
+    printk("interruptions initialize finished\n");
 
     lidt();
-    print("IDT loaded\n");
+    printk("IDT loaded\n");
 
     sti();
 

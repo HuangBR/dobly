@@ -13,7 +13,7 @@ INCLUDE = -I../include
 AS = nasm
 ASFLAGS = -f elf32 -g
 
-SRCS := kernel.c trap.c
+SRCS := kernel.c trap.c printk.c vsprintf.c
 
 OBJS = $(SRCS:.c=.o) traps.o
 

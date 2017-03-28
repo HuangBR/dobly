@@ -19,7 +19,7 @@ export ASFLAGS
 
 SRCS_ASM := boot_sect.asm
 
-SRCS_KERNEL    := $(addprefix kernel/, kernel.c trap.c) 
+SRCS_KERNEL    := $(addprefix kernel/, kernel.c trap.c vsprintf.c printk.c) 
 SRCS_DRIVERS   := $(addprefix drivers/, io.c screen.c)
 SRCS_INTERRUPT := $(addprefix interrupt/, idt.c pic.c)
 SRCS_MM		   := $(addprefix mm/, mem.c)
@@ -90,7 +90,7 @@ gdb: print_string
 debug: 
 	gdb -nx -x .gdbinit
 	
-*.o:*.c
+%.o: %.c
 	$(GCC) $(CFLAGS) -c $< -o $@	
 
 .PHONY: all clean 
