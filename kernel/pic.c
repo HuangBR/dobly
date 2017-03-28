@@ -1,6 +1,6 @@
 #include <types.h>
 #include <io.h>
-#include <pic.h>
+#include "pic.h"
 
 void intr_init()
 {

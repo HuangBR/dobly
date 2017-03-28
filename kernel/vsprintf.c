@@ -8,11 +8,15 @@
 static int skip_atoi(const char *s)
 {
     int i = 0;
+    int sign = 1;
+
+    if(*(s++) == '-')
+        sign = -1;
 
     while(is_digit(*s))
         i = i*10 + *(s++) - '0';
 
-    return i;
+    return i * sign;
 }
 
 #define ZEROPAD 1       /* pad with zero */

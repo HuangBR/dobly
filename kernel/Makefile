@@ -2,9 +2,9 @@
 # kernel
 #
 
-GCC = gcc
-#CFLAGS = -ffreestanding -O2 -m32 -g -W -Wall -nostdinc -fno-builtin -fno-stack-protector 
-INCLUDE = -I../include
+GCC ?= gcc
+CFLAGS ?= -ffreestanding -O2 -m32 -g -Wall -Wextra -fno-builtin -fno-stack-protector 
+INCLUDE ?= -I../include
 
 #LD = ld
 #LDFLAGS = -Ttext 0x1000 --oformat binary -m elf_i386 -nostdlib 
@@ -13,14 +13,18 @@ INCLUDE = -I../include
 AS = nasm
 ASFLAGS = -f elf32 -g
 
-SRCS := kernel.c trap.c printk.c vsprintf.c
+SRCS := kernel.c trap.c pic.c idt.c printk.c vsprintf.c
 
 OBJS = $(SRCS:.c=.o) traps.o
 
+DEPS = $(OBJS:.o=.d)
+
 all: $(OBJS)
 
+-include $(DEPS)
+
 %.o: %.c
-	$(GCC) $(INCLUDE) $(CFLAGS) -c $< -o $@	
+	$(GCC) $(INCLUDE) $(CFLAGS) -MMD -c $< -o $@	
 
 %.o: %.asm
 	$(AS) $(ASFLAGS) $< -o $@
@@ -28,4 +32,4 @@ all: $(OBJS)
 .PHONY: all clean
 
 clean:
-	$(RM) *.o .*swp $(MAIN)
+	$(RM) *.o *.d .*swp $(MAIN)

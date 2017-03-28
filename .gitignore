@@ -8,6 +8,7 @@
 *.pyc
 *.swp
 *.img
+*.d
 
 # Development friendly files
 tags

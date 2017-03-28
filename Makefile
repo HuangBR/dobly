@@ -16,76 +16,76 @@ MAIN_ASFLAGS = -f bin -g
 ASFLAGS = -f elf32 -g
 export ASFLAGS
 
+OS_BIN := DoblyOS.bin
 
-SRCS_ASM := boot_sect.asm
+SRCS_BOOT := $(addprefix boot/, boot.asm, read_disk.asm, print.asm \
+		gdt.asm switch_to_pm.asm )
 
-SRCS_KERNEL    := $(addprefix kernel/, kernel.c trap.c vsprintf.c printk.c) 
-SRCS_DRIVERS   := $(addprefix drivers/, io.c screen.c)
-SRCS_INTERRUPT := $(addprefix interrupt/, idt.c pic.c)
-SRCS_MM		   := $(addprefix mm/, mem.c)
+SRCS_KERNEL := $(addprefix kernel/, kernel.c trap.c pic.c idt.c \
+		vsprintf.c printk.c) 
 
-SRCS_C := $(SRCS_KERNEL) $(SRCS_DRIVERS) $(SRCS_INTERRUPT) \
+SRCS_DEV := $(addprefix dev/, io.c screen.c)
+
+SRCS_MM  := $(addprefix mm/, mem.c)
+
+SRCS_C := $(SRCS_KERNEL) $(SRCS_DEV) $(SRCS_INTERRUPT) \
 		$(SRCS_MM)
 
-
+# object files 
 OBJS_KERNEL    := $(SRCS_KERNEL:.c=.o) $(addprefix kernel/, traps.o)
-OBJS_DRIVERS   := $(SRCS_DRIVERS:.c=.o)
+
+OBJS_DEV   := $(SRCS_DEV:.c=.o)
+
 OBJS_INTERRUPT := $(SRCS_INTERRUPT:.c=.o) 
+
 OBJS_MM		   := $(SRCS_MM:.c=.o)
 
-OBJS := $(OBJS_KERNEL) $(OBJS_DRIVERS) $(OBJS_INTERRUPT) $(OBJS_MM)
+OBJS := $(OBJS_KERNEL) $(OBJS_DEV) $(OBJS_INTERRUPT) $(OBJS_MM)
 
-MAIN = boot_sect.bin
+# main 
+BOOT_BIN = boot/boot.bin
 
-all : os.img
+KERNEL_BIN = kernel.bin
 
-$(MAIN): $(SRCS_ASM)
-	$(AS) $(MAIN_ASFLAGS) $^ -o $@
+all : $(OS_BIN)
 
-os.img : $(MAIN) kernel.bin
+
+$(OS_BIN): $(BOOT_BIN) $(KERNEL_BIN) 
 	cat $^ > $@
 	truncate -s 12K $@
 
-$(OBJS_DRIVERS):
-	@make -C drivers
+$(BOOT_BIN):
+	cd boot && $(MAKE) $(MAKEFLAGS)
+	
 
-$(OBJS_KERNEL):
-	@make -C kernel
-
-$(OBJS_INTERRUPT):
-	@make -C interrupt
-
-$(OBJS_MM):
-	@make -C mm
-
-compile: $(OBJS_DRIVERS) $(OBJS_KERNEL) $(OBJS_INTERRUPT)
-	@echo compile finished
-
-run: os.img
-	qemu-system-i386 -drive format=raw,file=$< -display sdl -monitor stdio
-
-qemu: os.img
-	qemu-system-i386 -drive format=raw,file=$< -display sdl -s -S -monitor stdio
-
-bochs: os.img
-	bochs -f bochsrc
-
-kernel.bin: $(OBJS)
+$(KERNEL_BIN): $(OBJS_DEV) $(OBJS_KERNEL) $(OBJS_MM)
 	# $(LD) $(LDFLAGS) -T kernel.ld $^ -o $@
 	$(LD) $(LDFLAGS) $^ -o $@
 
-disasm: kernel.bin
+$(OBJS_DEV):
+	cd dev && $(MAKE) $(MAKEFLAGS)
+
+$(OBJS_KERNEL):
+	cd kernel && $(MAKE) $(MAKEFLAGS)
+
+$(OBJS_MM):
+	cd mm && $(MAKE) $(MAKEFLAGS)
+	
+# running in qemu or bochs 
+run: $(OS_BIN)
+	qemu-system-i386 -drive format=raw,file=$< -display sdl -monitor stdio
+
+qemu: $(OS_BIN)
+	qemu-system-i386 -drive format=raw,file=$< -display sdl -s -S -monitor stdio
+
+bochs: $(OS_BIN)
+	bochs -f bochsrc
+
+disasm: $(KERNEL_BIN)
 	objdump -m i386 -M i386,intel -b binary -D $<
 	ndisasm -b 32 -o1000h -a $<
 
-print_string.o: print_string.asm
-	$(AS) -f elf -F dwarf $^ -o $@
-
-print_string: print_string.o
-	ld -m elf_i386 $^ -o $@
-
-gdb: print_string
-	gdb -x gdbsrc $^
+#$(AS) -f elf -F dwarf $^ -o $@
 
 debug: 
 	gdb -nx -x .gdbinit
@@ -96,8 +96,7 @@ debug:
 .PHONY: all clean 
 
 clean:
-	$(RM) *.o *.bin os.img $(MAIN) .*.swp *.log
-	@make -C drivers   clean
-	@make -C kernel    clean
-	@make -C interrupt clean
-	@make -C mm		   clean
+	$(RM) *.o *.d *.bin .*.swp *.log
+	(cd dev && $(MAKE) clean)
+	(cd kernel && $(MAKE) clean)
+	(cd mm && $(MAKE) clean)

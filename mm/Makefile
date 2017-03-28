@@ -11,12 +11,17 @@ SRCS := mem.c
 
 OBJS = $(SRCS:.c=.o)
 
+DEPS = $(OBJS:.o=.d)
+
 all: $(OBJS)
 
+-include $(DEPS)
+
 %.o: %.c
-	$(GCC) $(INCLUDE) $(CFLAGS) -c $< -o $@	
+	$(GCC) $(INCLUDE) $(CFLAGS) -MMD -c $< -o $@	
+
 
 .PHONY: all clean
 
 clean:
-	$(RM) *.o .*swp $(MAIN)
+	$(RM) *.o *.d .*swp $(MAIN)

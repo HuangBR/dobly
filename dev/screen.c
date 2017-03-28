@@ -1,6 +1,6 @@
-#include "types.h"
-#include "io.h"
-#include "drivers/screen.h"
+#include <types.h>
+#include <io.h>
+#include <dev/screen.h>
 
 int get_cursor()
 {

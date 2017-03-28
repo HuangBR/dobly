@@ -1,6 +1,5 @@
 #include "types.h"
 #include "idt.h"
-#include "interrupts.h"
 
 struct idtr_struct idtr;
 struct gate_desc_struct idt[256];

@@ -4,10 +4,9 @@
  */
 #include <types.h>
 #include <io.h>
-#include <idt.h>
-#include <interrupts.h>
-#include <pic.h>
-#include <drivers/screen.h>
+#include <dev/screen.h>
+#include "idt.h"
+#include "pic.h"
 #include "traps.h"
 
 int do_exit(long code);

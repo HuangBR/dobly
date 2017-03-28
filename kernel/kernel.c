@@ -1,9 +1,9 @@
 #include <types.h>
-#include <idt.h>
-#include <pic.h>
-#include <interrupts.h>
+#include <string.h>
+#include <dev/screen.h>
+#include "idt.h"
+#include "pic.h"
 #include "traps.h"
-#include "drivers/screen.h"
 
 void main()
 {
@@ -25,9 +25,12 @@ void main()
 
     sti();
 
-    print("welcome to dobly's world\n");
+    printk("welcome to dobly's world\n");
 
-    __asm__ ("int $0x03\n");
+    // __asm__ ("int $0x03\n");
+
+    printk("version %d %s", 1, "beta");
+
 
 out:
     goto out;
