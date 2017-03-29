@@ -1,24 +1,22 @@
+# compile os
+# debug os
 # 
-#
-#
+
 GCC = gcc
-#CFLAGS = -ffreestanding -O2 -m32 -g -W -Wall -nostdinc -fno-builtin -fno-stack-protector -fomit-frame-pointer
 CFLAGS = -ffreestanding -O2 -g -W -Wall -m32 -std=c99
 export CFLAGS
 
 LD = ld
-#LDFLAGS = -Ttext 0x1000 --oformat binary -m elf_i386 -nostdlib 
 LDFLAGS = -Ttext 0x1000 --oformat binary -m elf_i386
-# LDFLAGS = -m elf_i386 -nostdlib
 
 AS = nasm
-MAIN_ASFLAGS = -f bin -g
 ASFLAGS = -f elf32 -g
 export ASFLAGS
 
 OS_BIN := DoblyOS.bin
 
-SRCS_BOOT := $(addprefix boot/, boot.asm, read_disk.asm, print.asm \
+# source files
+SRCS_BOOT := $(addprefix boot/, boot.asm read_disk.asm print.asm \
 		gdt.asm switch_to_pm.asm )
 
 SRCS_KERNEL := $(addprefix kernel/, kernel.c trap.c pic.c idt.c \
@@ -43,60 +41,69 @@ OBJS_MM		   := $(SRCS_MM:.c=.o)
 OBJS := $(OBJS_KERNEL) $(OBJS_DEV) $(OBJS_INTERRUPT) $(OBJS_MM)
 
 # main 
-BOOT_BIN = boot/boot.bin
+BOOT_BIN = boot.bin
 
 KERNEL_BIN = kernel.bin
 
 all : $(OS_BIN)
 
+.PHONY: all
 
+# os image file
 $(OS_BIN): $(BOOT_BIN) $(KERNEL_BIN) 
 	cat $^ > $@
 	truncate -s 12K $@
 
-$(BOOT_BIN):
-	cd boot && $(MAKE) $(MAKEFLAGS)
+# bootloader image
+$(BOOT_BIN): $(SRCS_BOOT)
+	$(AS) -I boot/ -f bin -g $< -o $@
 	
-
+# kernel binary
 $(KERNEL_BIN): $(OBJS_DEV) $(OBJS_KERNEL) $(OBJS_MM)
-	# $(LD) $(LDFLAGS) -T kernel.ld $^ -o $@
 	$(LD) $(LDFLAGS) $^ -o $@
 
+# devices compile
 $(OBJS_DEV):
-	cd dev && $(MAKE) $(MAKEFLAGS)
+	$(MAKE) -C dev $(MAKEFLAGS)
 
+# kernel compile
 $(OBJS_KERNEL):
-	cd kernel && $(MAKE) $(MAKEFLAGS)
+	$(MAKE) -C kernel $(MAKEFLAGS)
 
+# memory manage compile
 $(OBJS_MM):
-	cd mm && $(MAKE) $(MAKEFLAGS)
+	$(MAKE) -C mm $(MAKEFLAGS)
 	
+
 # running in qemu or bochs 
 run: $(OS_BIN)
 	qemu-system-i386 -drive format=raw,file=$< -display sdl -monitor stdio
 
-qemu: $(OS_BIN)
-	qemu-system-i386 -drive format=raw,file=$< -display sdl -s -S -monitor stdio
-
 bochs: $(OS_BIN)
 	bochs -f bochsrc
 
+
+# get assembly from binary file
 disasm: $(KERNEL_BIN)
 	objdump -m i386 -M i386,intel -b binary -D $<
 	ndisasm -b 32 -o1000h -a $<
 
-#$(AS) -f elf -F dwarf $^ -o $@
+# debug using qemu and gdb
+qemu: $(OS_BIN)
+	qemu-system-i386 -drive format=raw,file=$< -display sdl -s -S -monitor stdio
 
 debug: 
 	gdb -nx -x .gdbinit
 	
+
 %.o: %.c
 	$(GCC) $(CFLAGS) -c $< -o $@	
 
-.PHONY: all clean 
+.PHONY: clean 
 
 clean:
 	$(RM) *.o *.d *.bin .*.swp *.log
-	(cd dev && $(MAKE) clean)
-	(cd kernel && $(MAKE) clean)
-	(cd mm && $(MAKE) clean)
+	$(MAKE) -C boot		clean
+	$(MAKE) -C dev 		clean
+	$(MAKE) -C kernel 	clean
+	$(MAKE) -C mm 		clean

@@ -2,8 +2,8 @@
 # and system init
 #
 
-AS = nasm
-ASFLAGS = -f bin -g
+AS := nasm
+MAIN_ASFLAGS ?= -f bin -g
 
 SRCS := boot.asm read_disk.asm print.asm \
 		gdt.asm switch_to_pm.asm
