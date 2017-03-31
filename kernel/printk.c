@@ -1,5 +1,9 @@
 #include <stdarg.h>
 #include <stddef.h>
+#include <os/kernel.h>
+
+extern int vsprintf(char *, const char *, va_list);
+extern int print(char *);
 
 static char buf[1024];
 

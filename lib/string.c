@@ -2,9 +2,9 @@
 
 #ifndef _HAVE_ARCH_STRLEN
 
-static inline int strlen(const char *str) 
+static inline size_t strlen(const char *str) 
 {                                         
-    int i = 0;
+    size_t i = 0;
 
     while(str[i] != '\0')
         i++;
@@ -14,8 +14,21 @@ static inline int strlen(const char *str)
 
 #endif /* _HAVE_ARCH_STRLEN */
 
-#ifndef _HAVE_ARCH_MEMCPY
+#ifndef _HAVE_ARCH_STRNLEN
+static inline size_t strnlen(const char *str, size_t maxlen)
+{
+    size_t  n = 0;
 
+    while(str[n] != '\0' && maxlen){
+        n++;
+        maxlen--;
+    }
+
+    return n;
+}
+#endif /* _HAVE_ARCH_STRNLEN */
+
+#ifndef _HAVE_ARCH_MEMCPY
 void *memcpy(void *dest, const void *src, size_t len)
 {
     void *ret = dest;
@@ -28,7 +41,6 @@ void *memcpy(void *dest, const void *src, size_t len)
 
     return(ret);
 }
-
 #endif /* _HAVE_ARCH_MEMCPY */
 
 #ifndef _HAVE_ARCH_MEMSET

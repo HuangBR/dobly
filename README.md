@@ -13,6 +13,7 @@ just for a start
   - gdb: debug os with qemu
   - gnu toolchains: make, ld, as
   - qemu: used for running os
+  - cmockery: google testing framework
 
 # start
   - running in qemu:

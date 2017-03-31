@@ -1,5 +1,6 @@
 #include <types.h>
 #include <string.h>
+#include <os/kernel.h>
 #include <dev/screen.h>
 #include "idt.h"
 #include "pic.h"

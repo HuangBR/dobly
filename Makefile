@@ -26,19 +26,21 @@ SRCS_DEV := $(addprefix dev/, io.c screen.c)
 
 #SRCS_MM  := $(addprefix mm/, mem.c)
 
-SRCS_C := $(SRCS_KERNEL) $(SRCS_DEV) $(SRCS_INTERRUPT) \
+SRCS_LIB := $(addprefix lib/, ctype.c string.c)
+
+SRCS_C := $(SRCS_KERNEL) $(SRCS_DEV) $(SRCS_LIB) \
 		$(SRCS_MM)
 
 # object files 
-OBJS_KERNEL    := $(SRCS_KERNEL:.c=.o) $(addprefix kernel/, traps.o)
+OBJS_KERNEL	:= $(SRCS_KERNEL:.c=.o) $(addprefix kernel/, traps.o)
 
-OBJS_DEV   := $(SRCS_DEV:.c=.o)
+OBJS_DEV := $(SRCS_DEV:.c=.o)
 
-OBJS_INTERRUPT := $(SRCS_INTERRUPT:.c=.o) 
+OBJS_MM := $(SRCS_MM:.c=.o)
 
-OBJS_MM		   := $(SRCS_MM:.c=.o)
+OBJS_LIB := $(SRCS_LIB:.c=.o)
 
-OBJS := $(OBJS_KERNEL) $(OBJS_DEV) $(OBJS_INTERRUPT) $(OBJS_MM)
+OBJS := $(OBJS_KERNEL) $(OBJS_DEV) $(OBJS_INTERRUPT) $(OBJS_MM) $(OBJS_LIB)
 
 # main 
 BOOT_BIN = boot.bin
@@ -59,7 +61,7 @@ $(BOOT_BIN): $(SRCS_BOOT)
 	$(AS) -I boot/ -f bin -g $< -o $@
 	
 # kernel binary
-$(KERNEL_BIN): $(OBJS_DEV) $(OBJS_KERNEL) $(OBJS_MM)
+$(KERNEL_BIN): $(OBJS_DEV) $(OBJS_KERNEL) $(OBJS_MM) $(OBJS_LIB)
 	$(LD) $(LDFLAGS) $^ -o $@
 
 # devices compile
@@ -74,6 +76,9 @@ $(OBJS_KERNEL):
 $(OBJS_MM):
 	$(MAKE) -C mm $(MAKEFLAGS)
 	
+# lib compile
+$(OBJS_LIB):
+	$(MAKE) -C lib $(MAKEFLAGS)
 
 # running in qemu or bochs 
 run: $(OS_BIN)
@@ -107,3 +112,4 @@ clean:
 	$(MAKE) -C dev 		clean
 	$(MAKE) -C kernel 	clean
 	$(MAKE) -C mm 		clean
+	$(MAKE) -C lib		clean
