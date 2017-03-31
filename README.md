@@ -8,7 +8,7 @@ just for a start
  I will figure them out.
 
 # tools
-  - nasm: write bootloader and interrupt controls
+  - nasm: write bootloader 
   - gcc: write kernel main and drivers, etc
   - gdb: debug os with qemu
   - gnu toolchains: make, ld, as
@@ -21,6 +21,7 @@ just for a start
     ```
   - debugging:
     ```
+    make qemu
     make debug
     ```
   - clean files:

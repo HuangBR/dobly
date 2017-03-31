@@ -17,15 +17,19 @@ typedef unsigned char BYTE;
 typedef unsigned short WORD;
 typedef unsigned int DWORD;
 
+#ifndef _SIZE_T
+#define _SIZE_T
 typedef unsigned int size_t;
+#endif
 
 enum {
     false = 0,
     true  = 1
 };
 
-#undef  NULL
+#ifndef NULL
 #define NULL ((void*)0)
+#endif
 
 typedef uint bool;
 

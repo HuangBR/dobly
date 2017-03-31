@@ -7,7 +7,7 @@ CFLAGS = -ffreestanding -O2 -m32 -g -W -Wall -nostdinc -fno-builtin -fno-stack-p
 INCLUDE = -I../include
 
 
-SRCS := mem.c 
+SRCS := 
 
 OBJS = $(SRCS:.c=.o)
 

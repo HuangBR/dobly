@@ -3,7 +3,7 @@
 # 
 
 GCC = gcc
-CFLAGS = -ffreestanding -O2 -g -W -Wall -m32 -std=c99
+CFLAGS = -ffreestanding -O2 -g -W -Wall -m32 -std=c99 -fomit-frame-pointer
 export CFLAGS
 
 LD = ld
@@ -24,7 +24,7 @@ SRCS_KERNEL := $(addprefix kernel/, kernel.c trap.c pic.c idt.c \
 
 SRCS_DEV := $(addprefix dev/, io.c screen.c)
 
-SRCS_MM  := $(addprefix mm/, mem.c)
+#SRCS_MM  := $(addprefix mm/, mem.c)
 
 SRCS_C := $(SRCS_KERNEL) $(SRCS_DEV) $(SRCS_INTERRUPT) \
 		$(SRCS_MM)

@@ -25,11 +25,16 @@ void main()
 
     sti();
 
-    printk("welcome to dobly's world\n");
+    printk("");
 
     // __asm__ ("int $0x03\n");
 
-    printk("version %d %s", 1, "beta");
+    char *s = "welcome to dobly's world";
+    char info[512];
+    size_t n = strlen(s);
+    memset(info, '\0', 512);
+    memcpy(info, s, n); 
+    printk("%s %n  version: %d beta", info, n, 1);
 
 
 out:
