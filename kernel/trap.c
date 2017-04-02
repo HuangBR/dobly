@@ -9,6 +9,8 @@
 #include "pic.h"
 #include "traps.h"
 
+extern int printk(const char *fmt, ...);
+
 int do_exit(long code);
 
 void page_exception(void);
@@ -78,9 +80,10 @@ void panic(char *message, char *code, bool halt)
 /*
  * Exception Handlers
  */
-void do_general_protection()
+void do_general_protection(long esp, long error_code)
 {
-    panic("general protection", "###", true);
+   printk("esp:%8x\terror_code:%x\n", esp, error_code);
+   panic("general protection", "###", true);
 }
 
 void do_divide_error(void)
@@ -98,9 +101,22 @@ void do_nmi(void)
     panic("NMI Interrupt","#--", false);
 }
 
-void do_int3(void)
+void do_int3(long *esp, __attribute__((__unused__)) long error_code, long gs,
+        long fs, long es, long ds, long ebp, long edi,
+        long esi, long edx, long ecx, long ebx, long eax)
 {
-    panic("Breakpoint","#BP", false);
+    int tr;     /* task register */
+
+    __asm__ ("str %%ax"
+            : "=&a" (tr)
+            : "0" (0)
+            );
+    printk("eax:%8x\tebx:%8x\tecx:%8x\tedx:%8x\n", eax, ebx,
+            ecx, edx);
+    printk("esi:%8x\tedi:%8x\tebp:%8x\tesp:%8x\n", esi, edi,
+            ebp, esp);
+    printk("ds:%8x\tes:%8x\tfs:%8x\tgs:%8x\n", ds, es, fs, gs);
+    printk("eip:%8x\tcs:%4x\t EFLAGS:%8x\n", esp[0], esp[1], esp[2]);
 }
 
 void do_overflow(void)
@@ -123,8 +139,9 @@ void do_device_not_available(void)
     panic("Device Not Available","#NM", false);
 }
 
-void do_double_fault(void)
+void do_double_fault(long esp, long error_code)
 {
+    printk("esp:%8x\terror_code:%x\n", esp, error_code);
     panic("Double Fault","#DF", true);
 }
 
@@ -180,6 +197,7 @@ void do_SIMD_FP(void)
 
 void do_reserved(long esp, long error_code)
 {
+    printk("esp:%8x\terror_code:%x\n", esp, error_code);
     panic("reserved (15,17-31) error", "###", false);
 }
 

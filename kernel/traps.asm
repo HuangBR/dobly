@@ -104,8 +104,8 @@ coprocessor_error:
 
 ; This is called for all exceptions which push an error code. 
 error_code:
-    xchg eax, [esp-4]
-    xchg ebx, [esp]
+    xchg eax, [esp+4] ; error code
+    xchg ebx, [esp]   ; function address
     push ecx
     push edx
     push esi
@@ -115,10 +115,10 @@ error_code:
     push es
     push fs
     push gs
-    push eax
-    lea eax, [esp+64]
-    push eax
-    mov eax, 0x10
+    push eax    ; error code
+    lea eax, [esp+48]
+    push eax    ; sp before interrupt
+    mov eax, 0x10 ; data segment selector
     mov ds, ax
     mov es, ax
     mov fs, ax

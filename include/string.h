@@ -69,9 +69,9 @@ static inline void *memcpy(void *dest, void *src, size_t n)
 static inline void *memset(void *dest, unsigned char c, size_t n)
 {
     __asm__("cld\n\t"
-            "rep stos"
+            "rep stosb"
             : "=&c" (n), "=&D" (dest)
-            : "" (n), "1" (dest), "a" (c)
+            : "0" (n), "1" (dest), "a" (c)
             : "memory", "ax"
            );
     return dest;

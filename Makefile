@@ -22,7 +22,7 @@ SRCS_BOOT := $(addprefix boot/, boot.asm read_disk.asm print.asm \
 SRCS_KERNEL := $(addprefix kernel/, kernel.c trap.c pic.c idt.c \
 		vsprintf.c printk.c) 
 
-SRCS_DEV := $(addprefix dev/, io.c screen.c)
+SRCS_DEV := $(addprefix dev/, screen.c)
 
 #SRCS_MM  := $(addprefix mm/, mem.c)
 

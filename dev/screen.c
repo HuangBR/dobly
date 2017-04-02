@@ -58,6 +58,8 @@ void print_char(char c, int col, int row, char attr)
     if(c == '\n'){
         int rows = offset / (2 * MAX_COLS) ;
         offset = get_screen_offset(79, rows);
+    } if(c == '\t'){
+        offset = offset + 4;
     } else {
         vidmem[offset] = c;
         vidmem[offset+1] = attr;
