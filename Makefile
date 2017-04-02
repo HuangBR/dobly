@@ -3,7 +3,7 @@
 # 
 
 GCC = gcc
-CFLAGS = -ffreestanding -O2 -g -W -Wall -m32 -std=c99 -fomit-frame-pointer
+CFLAGS = -ffreestanding -O2 -g -W -Wall -m32 -std=c99 -fomit-frame-pointer -fno-builtin
 export CFLAGS
 
 LD = ld

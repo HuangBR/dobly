@@ -51,14 +51,16 @@ static inline size_t strnlen(const char * s, size_t count)
 }
 
 #define _HAVE_ARCH_MEMCPY
-static inline void *memcpy(void *dest, void *src, size_t n)
+static inline void *memcpy(void *dest, const void *src, size_t n)
 {
+    int d0, d1;
+
     __asm__ volatile (
             "cld\n\t"
             "rep\n\t"
             "movsb"
-            :"=&c" (n), "=&S" (src), "=&D" (dest)
-            : "" (n), "1" (src), "2" (dest)
+            :"=&c" (n), "=&S" (d0), "=&D" (d1)
+            : "0" (n), "1" (src), "2" (dest)
             : "memory"
         );
 
@@ -66,15 +68,20 @@ static inline void *memcpy(void *dest, void *src, size_t n)
 }
 
 #define _HAVE_ARCH_MEMSET
-static inline void *memset(void *dest, unsigned char c, size_t n)
+
+static inline void *memset(void *s, int c, size_t n)
 {
-    __asm__("cld\n\t"
+    int d0, d1;
+
+    __asm__ __volatile__ (
+            "cld\n\t"
             "rep stosb"
-            : "=&c" (n), "=&D" (dest)
-            : "0" (n), "1" (dest), "a" (c)
-            : "memory", "ax"
-           );
-    return dest;
+            : "=&c" (d0), "=&D" (d1)
+            : "0" (n), "1" (s), "a" (c)
+            : "memory" 
+            );
+
+    return s;
 }
 
 #endif /* _STRING_H */
