@@ -24,6 +24,7 @@ jmp $
 %include "read_disk.asm"
 %include "gdt.asm"
 %include "switch_to_pm.asm"
+%include "setup_paging.asm"
 
 [bits 16]
 load_kernel:
@@ -40,7 +41,9 @@ load_kernel:
 BEGIN_PM:
     mov ebx, MSG_PROT_MODE
     call print_string_pm
-    
+
+    call setup_paging
+
     call KERNEL_OFFSET
 
     jmp $
