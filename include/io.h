@@ -7,7 +7,7 @@ static inline void outb(u16 port, u8 value)
 {
     __asm__ volatile ("out %%al, %%dx" 
             : 
-            : "a"(value), "dN"(port));
+            : "a"(value), "d"(port));
 }
 
 static inline u8 inb(u16 port)
@@ -15,7 +15,7 @@ static inline u8 inb(u16 port)
     u8 value;
     __asm__ volatile ("in %%dx, %%al" 
             : "=a"(value) 
-            : "dN"(port) );
+            : "d"(port) );
     return value;
 }
 
@@ -23,7 +23,7 @@ static inline void outw(u16 port, u16 value)
 {
     __asm__ volatile ("out %%ax, %%dx"
             :
-            : "a"(value), "dN"(port)
+            : "a"(value), "d"(port)
             );
 }
 
@@ -32,7 +32,7 @@ static inline u16 inw(u16 port)
     u16 value;
     __asm__ volatile ("in %%dx, %%ax"
             : "=a"(value)
-            : "dN"(port)
+            : "d"(port)
             );
     return value;
 }
