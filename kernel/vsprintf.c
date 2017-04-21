@@ -304,7 +304,7 @@ int sprintf(char * buf, const char *fmt, ...)
     int i;
 
     va_start(args, fmt);
-    i=vsprintf(buf,fmt,args);
+    i = vsprintf(buf,fmt,args);
     va_end(args);
 
     return i;

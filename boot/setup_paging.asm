@@ -21,7 +21,3 @@ go: stosw
     or  eax, 0x8000000
     mov cr0, eax
     ret
-
-
-
-

@@ -12,12 +12,13 @@ SRCS = test_string.c
 OBJS = $(SRCS:.c=.o)
 
 
+.PHONY: all
 
 all: $(OBJS)
 	$(shell for obj in $(OBJS); do \
 			echo $(CC) $(CFLAGS) $(INCLUDES) $$obj  $(LIBS) -o $${obj%.o}; \
 			done)
-
+.PHONY: test
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@

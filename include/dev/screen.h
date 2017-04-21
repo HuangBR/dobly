@@ -1,7 +1,7 @@
 #ifndef _SCREEN_H
 #define _SCREEN_H
 
-#define VIDEO_MEMORY 0xb8000
+#define VIDEO_MEMORY 0xB8000
 #define MAX_COLS 80
 #define MAX_ROWS 25
 
